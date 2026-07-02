@@ -4,7 +4,7 @@ const express =require("express");
 
 const cors =require("cors");
 
-const dbconnect =require("./DB/database");
+const dbconnect =require("./DB/Database");
 
 const serviceRoutes =require("./Routes/ServiceMasterRoutes");
 
