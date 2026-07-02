@@ -3,7 +3,7 @@ const crypto = require("crypto");
 const Booking = require("../Models/Booking");
 const BeautyParlour = require("../Models/BeautyParlour");
 const User = require("../Models/User");
-const nodemailer = require("nodemailer")
+//const nodemailer = require("nodemailer")
 require("dotenv").config()
 const { Resend } = require("resend");
 
