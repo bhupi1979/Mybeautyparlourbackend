@@ -4,7 +4,10 @@ const crypto = require("crypto")
 const Razorpay = require("razorpay");
 require("dotenv").config();
 const User = require("../Models/User");
-const nodemailer = require("nodemailer");
+//const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 exports.createBooking =
 async(req,res)=>{
 
@@ -40,20 +43,14 @@ await User.findById(
 );
 
 if(parlour?.email){
+await resend.emails.send({
+  from: "onboarding@resend.dev",
+  to: parlour.email,
+  subject: "Booking Received",
+  html: `
+    <h2>New Booking Received</h2>
 
-await transporter.sendMail({
-
-from:process.env.EMAIL_USER,
-
-to:parlour.email,
-
-subject:"New Booking Received",
-
-html:`
-
-<h2>New Booking Received</h2>
-
-<hr/>
+ <hr/>
 
 <h3>Customer Details</h3>
 
@@ -63,41 +60,98 @@ ${user?.name}
 </p>
 
 <p>
-<b>Mobile:</b>
-${user?.mobile}
-</p>
+ <b>Mobile:</b>
+ ${user?.mobile}
+ </p>
 
-<p>
+ <p>
 <b>Email:</b>
 ${user?.email}
-</p>
+ </p>
 
-<hr/>
+ <hr/>
 
-<h3>Booking Details</h3>
+ <h3>Booking Details</h3>
 
-<p>
-<b>Service:</b>
-${req.body.serviceName}
-</p>
+ <p>
+ <b>Service:</b>
+ ${req.body.serviceName}
+ </p>
 
-<p>
-<b>Amount:</b>
-₹${req.body.amount}
-</p>
+ <p>
+ <b>Amount:</b>
+ ₹${req.body.amount}
+ </p>
 
-<p>
-<b>Status:</b>
-Pending
-</p>
+ <p>
+ <b>Status:</b>
+ Pending
+ </p>
 
-<p>
-<b>Booking Date:</b>
-${new Date().toLocaleString()}
-</p>
+ <p>
+ <b>Booking Date:</b>
+ ${new Date().toLocaleString()}
+ </p>
 
-`
-});
+  `
+})
+// await transporter.sendMail({
+
+// from:process.env.EMAIL_USER,
+
+// to:parlour.email,
+
+// subject:"New Booking Received",
+
+// html:`
+
+// <h2>New Booking Received</h2>
+
+// <hr/>
+
+// <h3>Customer Details</h3>
+
+// <p>
+// <b>Name:</b>
+// ${user?.name}
+// </p>
+
+// <p>
+// <b>Mobile:</b>
+// ${user?.mobile}
+// </p>
+
+// <p>
+// <b>Email:</b>
+// ${user?.email}
+// </p>
+
+// <hr/>
+
+// <h3>Booking Details</h3>
+
+// <p>
+// <b>Service:</b>
+// ${req.body.serviceName}
+// </p>
+
+// <p>
+// <b>Amount:</b>
+// ₹${req.body.amount}
+// </p>
+
+// <p>
+// <b>Status:</b>
+// Pending
+// </p>
+
+// <p>
+// <b>Booking Date:</b>
+// ${new Date().toLocaleString()}
+// </p>
+
+// `
+// });
 
 }
 //sending data to frontend

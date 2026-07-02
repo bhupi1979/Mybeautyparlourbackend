@@ -2,9 +2,11 @@
 const jwt =require("jsonwebtoken");
 const User = require("../Models/User");
 const Otp = require("../Models/Otp")
-const nodemailer = require("nodemailer");
+//const nodemailer = require("nodemailer");
 require('dotenv').config()
+const { Resend } = require("resend");
 
+const resend = new Resend(process.env.RESEND_API_KEY);
 //sending otp to the user
 //************************ */
 exports.sendOtp =
@@ -21,32 +23,41 @@ await Otp.create({mobile,email,otp,expiresAt:new Date(Date.now()+10*60*1000)
 
 })
 
-    const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // 587 ke liye false
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
+//     const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 587,
+//   secure: false, // 587 ke liye false
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+//   tls: {
+//     rejectUnauthorized: false,
+//   },
+// });
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "OTP Verification",
-      html: `
-        <h2>Your OTP is ${otp}</h2>
-        <p>This OTP is valid for 10 minutes.</p>
-      `,
-    };
+//     const mailOptions = {
+//       from: process.env.EMAIL_USER,
+//       to: email,
+//       subject: "OTP Verification",
+//       html: `
+//         <h2>Your OTP is ${otp}</h2>
+//         <p>This OTP is valid for 10 minutes.</p>
+//       `,
+//     };
 
-    const info = await transporter.sendMail(mailOptions)
-    console.log("Email sent: " + info.response)
-
+//     const info = await transporter.sendMail(mailOptions)
+//     console.log("Email sent: " + info.response)
+const info=await resend.emails.send({
+  from: "onboarding@resend.dev",
+  to: email,
+  subject: "OTP Verification",
+  html: `
+    <h2>Your OTP is ${otp}</h2>
+    <p>This OTP is valid for 10 minutes.</p>
+  `,
+})
+console.log("Email sent: " + info.response)
 res.json({success:true,otp});
 
 }
