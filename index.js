@@ -25,9 +25,9 @@ app.use("/api/parlours",beautyParlourRoutes)
 app.use(Mainroutes)
 app.use("/api/payment",paymentroutes)
 
-app.listen(process.env.PORT,async()=>
-    {
-        
-        console.log(`Server Running on port${process.env.PORT}`)
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server Running on port ${PORT}`);
 }
-)
+);
