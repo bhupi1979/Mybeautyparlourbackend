@@ -3,7 +3,7 @@ const crypto = require("crypto");
 const Booking = require("../Models/Booking");
 const BeautyParlour = require("../Models/BeautyParlour");
 const User = require("../Models/User");
-//const nodemailer = require("nodemailer")
+const nodemailer = require("nodemailer")
 require("dotenv").config()
 const { Resend } = require("resend");
 
@@ -178,82 +178,82 @@ booking.userId
 
 );
 
-// const transporter = nodemailer.createTransport({
-//   host: "smtp.gmail.com",
-//   port: 587,
-//   secure: false, // 587 ke liye false
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
-//   },
-//   tls: {
-//     rejectUnauthorized: false,
-//   },
-// })
-
-// await transporter.sendMail({
-
-// from:process.env.EMAIL_USER,
-
-// to:parlour.email,
-
-// subject:"Payment Received",
-
-// html:`
-
-// <h2>Payment Successful</h2>
-
-// <p>
-
-// Customer :
-
-// ${user.name}
-
-// </p>
-
-// <p>
-
-// Mobile :
-
-// ${user.mobile}
-
-// </p>
-
-// <p>
-
-// Service :
-
-// ${booking.serviceName}
-
-// </p>
-
-// <p>
-
-// Amount :
-
-// ₹${booking.amount}
-
-// </p>
-
-// `
-
-// });
-await resend.emails.send({
-  from: "onboarding@resend.dev",
-  to: parlour.email,
-  subject: "Payment Received",
-  html: `
-    <h2>Payment Successful</h2>
-
-    <p>Customer : ${user.name}</p>
-
-    <p>Mobile : ${user.mobile}</p>
-
-    <p>Service : ${booking.serviceName}</p>
-
-    <p>Amount : ₹${booking.amount}</p>
-  `,
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // 587 ke liye false
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
 })
+
+await transporter.sendMail({
+
+from:process.env.EMAIL_USER,
+
+to:parlour.email,
+
+subject:"Payment Received",
+
+html:`
+
+<h2>Payment Successful</h2>
+
+<p>
+
+Customer :
+
+${user.name}
+
+</p>
+
+<p>
+
+Mobile :
+
+${user.mobile}
+
+</p>
+
+<p>
+
+Service :
+
+${booking.serviceName}
+
+</p>
+
+<p>
+
+Amount :
+
+₹${booking.amount}
+
+</p>
+
+`
+
+});
+// await resend.emails.send({
+//   from: "onboarding@resend.dev",
+//   to: parlour.email,
+//   subject: "Payment Received",
+//   html: `
+//     <h2>Payment Successful</h2>
+
+//     <p>Customer : ${user.name}</p>
+
+//     <p>Mobile : ${user.mobile}</p>
+
+//     <p>Service : ${booking.serviceName}</p>
+
+//     <p>Amount : ₹${booking.amount}</p>
+//   `,
+// })
 res.json({
 
 success:true,
